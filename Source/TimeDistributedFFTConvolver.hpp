@@ -71,11 +71,10 @@ TimeDistributedFFTConvolver<FLOAT_TYPE>::TimeDistributedFFTConvolver(FLOAT_TYPE 
         mInputImag[i]->clear();
     }
     
-    mOutputReal = new juce::AudioBuffer<FLOAT_TYPE>(1, 2 * partitionSize);
-    checkNull(mOutputReal);
+    mOutputReal = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, 2 * partitionSize);
     mOutputReal->clear();
-    mOutputImag = new juce::AudioBuffer<FLOAT_TYPE>(1, 2 * partitionSize);
-    checkNull(mOutputImag);
+     
+    mOutputImag = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, 2 * partitionSize);
     mOutputImag->clear();
     
     mBuffersReal[0] = new RefCountedAudioBuffer<FLOAT_TYPE>(1, 2 * partitionSize);
@@ -92,8 +91,7 @@ TimeDistributedFFTConvolver<FLOAT_TYPE>::TimeDistributedFFTConvolver(FLOAT_TYPE 
         mBuffersImag[i]->clear();
     }
     
-    mPreviousTail = new juce::AudioBuffer<FLOAT_TYPE>(1, partitionSize);
-    checkNull(mPreviousTail);
+    mPreviousTail = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, partitionSize);
     mPreviousTail->clear();
 }
 

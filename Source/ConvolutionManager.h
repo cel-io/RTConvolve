@@ -29,8 +29,7 @@ public:
         if (impulseResponse == nullptr)
         {
             mBufferSize = DEFAULT_BUFFER_SIZE;
-            mImpulseResponse = new juce::AudioBuffer<FLOAT_TYPE>(1, DEFAULT_NUM_SAMPLES);
-            checkNull(mImpulseResponse);
+            mImpulseResponse = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, DEFAULT_NUM_SAMPLES);
             
             FLOAT_TYPE *ir = mImpulseResponse->getWritePointer(0);
             genImpulse(ir, DEFAULT_NUM_SAMPLES);
@@ -39,8 +38,7 @@ public:
         }
         else
         {
-            mImpulseResponse = new juce::AudioBuffer<FLOAT_TYPE>(1, numSamples);
-            checkNull(mImpulseResponse);
+            mImpulseResponse = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, numSamples);
             mImpulseResponse->clear();
             FLOAT_TYPE *ir = mImpulseResponse->getWritePointer(0);
             
@@ -98,8 +96,7 @@ public:
     
     void setImpulseResponse(const FLOAT_TYPE *impulseResponse, int numSamples)
     {
-        mImpulseResponse = new juce::AudioBuffer<FLOAT_TYPE>(1, numSamples);
-        checkNull(mImpulseResponse);
+        mImpulseResponse = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, numSamples);
         
         mImpulseResponse->clear();
         
@@ -110,31 +107,28 @@ public:
     
 private:
     int mBufferSize;
-    juce::ScopedPointer<UPConvolver<FLOAT_TYPE> > mUniformConvolver;
-    juce::ScopedPointer<TimeDistributedFFTConvolver<FLOAT_TYPE> >  mTimeDistributedConvolver;
-    juce::ScopedPointer<juce::AudioBuffer<FLOAT_TYPE> > mOutput;
-    juce::ScopedPointer<juce::AudioBuffer<FLOAT_TYPE> > mImpulseResponse;
+    std::unique_ptr<UPConvolver<FLOAT_TYPE> > mUniformConvolver;
+    std::unique_ptr<TimeDistributedFFTConvolver<FLOAT_TYPE> >  mTimeDistributedConvolver;
+    std::unique_ptr<juce::AudioBuffer<FLOAT_TYPE> > mOutput;
+    std::unique_ptr<juce::AudioBuffer<FLOAT_TYPE> > mImpulseResponse;
     
     void init(FLOAT_TYPE *impulseResponse, int numSamples)
     {
-        mUniformConvolver = new UPConvolver<FLOAT_TYPE>(impulseResponse, numSamples, mBufferSize, 8);
-        checkNull(mUniformConvolver);
+        mUniformConvolver = std::make_unique<UPConvolver<FLOAT_TYPE>>(impulseResponse, numSamples, mBufferSize, 8);
         
         FLOAT_TYPE *subIR = impulseResponse + (8 * mBufferSize);
         int subNumSamples = numSamples - (8 * mBufferSize);
         
         if (subNumSamples > 0)
         {
-            mTimeDistributedConvolver = new TimeDistributedFFTConvolver<FLOAT_TYPE>(subIR, subNumSamples, mBufferSize);
-            checkNull(mTimeDistributedConvolver);
+            mTimeDistributedConvolver = std::make_unique< TimeDistributedFFTConvolver<FLOAT_TYPE>>(subIR, subNumSamples, mBufferSize);
         }
         else
         {
             mTimeDistributedConvolver = nullptr;
         }
         
-        mOutput = new juce::AudioBuffer<FLOAT_TYPE>(1, mBufferSize);
-        checkNull(mOutput);
+        mOutput = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, mBufferSize);
     }
 };
 

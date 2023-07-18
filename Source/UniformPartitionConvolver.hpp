@@ -60,15 +60,13 @@ UPConvolver<FLOAT_TYPE>::UPConvolver(FLOAT_TYPE *impulseResponse, int numSamples
         mInputImag[i]->clear();
     }
     
-    mOutputReal = new juce::AudioBuffer<FLOAT_TYPE>(1, 2 * mBufferSize);
-    checkNull(mOutputReal);
+    mOutputReal = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, 2 * mBufferSize);
+    mOutputReal->clear();
     
-    mOutputImag = new juce::AudioBuffer<FLOAT_TYPE>(1, 2 * mBufferSize);
-    checkNull(mOutputImag);
+    mOutputImag = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, 2 * mBufferSize);
     mOutputImag->clear();
     
-    mPreviousOutputTail = new juce::AudioBuffer<FLOAT_TYPE>(1, mBufferSize);
-    checkNull(mPreviousOutputTail);
+    mPreviousOutputTail = std::make_unique<juce::AudioBuffer<FLOAT_TYPE>>(1, mBufferSize);
     mPreviousOutputTail->clear();
 }
 

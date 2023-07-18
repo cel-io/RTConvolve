@@ -60,9 +60,9 @@ private:
     juce::OwnedArray<juce::AudioBuffer<FLOAT_TYPE> > mInputReal;
     juce::OwnedArray<juce::AudioBuffer<FLOAT_TYPE> > mInputImag;
 
-    juce::ScopedPointer<juce::AudioBuffer<FLOAT_TYPE> > mPreviousOutputTail;
-    juce::ScopedPointer<juce::AudioBuffer<FLOAT_TYPE> > mOutputReal;
-    juce::ScopedPointer<juce::AudioBuffer<FLOAT_TYPE> > mOutputImag;
+    std::unique_ptr<juce::AudioBuffer<FLOAT_TYPE> > mPreviousOutputTail;
+    std::unique_ptr<juce::AudioBuffer<FLOAT_TYPE> > mOutputReal;
+    std::unique_ptr<juce::AudioBuffer<FLOAT_TYPE> > mOutputImag;
     
     int mBufferSize;
     int mNumPartitions;
